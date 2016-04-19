@@ -6,7 +6,6 @@ public class ReadTextFile{
   public static void main(String[] args) throws IOException{
     String pwd = getCurrentDirectory();
     ArrayList<ArrayList<String>> allSongs = new ArrayList<ArrayList<String>>();
-
     try{
       File path = new File(pwd+"/Songs");
       File[] files = path.listFiles();
@@ -29,17 +28,28 @@ public class ReadTextFile{
           vectorizedMatrix[i][dictionary.get(word)]++;
         }
       }
-      
-      for(int i=0;i<numSongs;i++){
-        for(int j=0;j<corpusSize;j++){
-          System.out.print(vectorizedMatrix[i][j]);
-          System.out.print(" ");
-        }
-        System.out.println();
-      }
+      printToFile(vectorizedMatrix,numSongs,corpusSize);
     }
     catch(Exception e){
       System.out.println("Error while adding songs to allSongs:" + e.getMessage());
+    }
+  }
+
+  public static void printToFile(int vectorizedMatrix[][],int numSongs,int corpusSize) throws IOException{
+    FileOutputStream fileOut = null;
+    try{
+      fileOut = new FileOutputStream("Vectorized_Matrix.txt");
+      for(int i=0;i<numSongs;i++){
+        StringBuilder toFile = new StringBuilder();
+        for(int element : vectorizedMatrix[i]) {
+          toFile.append(element).append(" ");
+        }
+        fileOut.write(toFile.toString().trim().getBytes());
+        fileOut.write("\n".getBytes());
+      }
+    }
+    catch(Exception e){
+      System.out.println("Error while writing vectorized matrix to file:" + e.getMessage());
     }
   }
 
