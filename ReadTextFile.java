@@ -9,6 +9,7 @@ public class ReadTextFile{
     try{
       File path = new File(pwd+"/Songs");
       File[] files = path.listFiles();
+      Arrays.sort(files);
       for(int i=0;i<files.length;i++){
         if(files[i].isFile()){
           String fileName = files[i].getName();
