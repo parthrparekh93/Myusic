@@ -54,7 +54,7 @@ public class ReadTextFile{
     }
   }
 
-  public static HashMap<String,Integer> generateDictionary(ArrayList<ArrayList<String>> allSongs){
+  public static HashMap<String,Integer> generateDictionary(ArrayList<ArrayList<String>> allSongs) throws Exception{
     HashMap<String,Integer> dictionary = new HashMap<String,Integer>();
     int index = 0;
     for(ArrayList<String> song : allSongs){
@@ -64,6 +64,12 @@ public class ReadTextFile{
         }
       }
     }
+
+    PrintWriter writer = new PrintWriter("dictionary.txt", "UTF-8");
+    for (Map.Entry entry : dictionary.entrySet()) {
+      writer.print("'"+entry.getKey()+"':"+entry.getValue()+",");
+    }
+    writer.close();
     return dictionary;
   }
 
