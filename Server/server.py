@@ -19,9 +19,9 @@ def displayWordCloud():
     for i in xrange(len(clusters)):
         cloud_dict = dict()
         cloud_dict['text'] = clusters[i]['Topic']
-        cloud_dict['size'] = clusters[i]['Weight']
+        cloud_dict['size'] = clusters[i]['Weight']/2
         frequency_list.append(cloud_dict)
-    print(frequency_list)    
+    print(frequency_list)
     return render_template('homepage.html',frequency_list=frequency_list)
 
 if __name__ == '__main__':
