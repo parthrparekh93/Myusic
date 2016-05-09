@@ -55,16 +55,23 @@ def main():
     for i, topic_dist in enumerate(topic_word):
         cluster_dict = dict()
         cluster_dict['Cluster_id'] = i
-        cluster_dict['Topic'] = 'Topic'+str(i)
         cluster_dict['Songs'] = []
         for j in range(X.shape[0]):
             if doc_topic[j].argmax() == i:
                 cluster_dict['Songs'].append(files[j])
         cluster_dict['Weight'] = len(cluster_dict['Songs'])
         cluster_dict['Words'] = np.array(vocab)[np.argsort(topic_dist)][:-(n_top_words+1):-1]
+        cluster_dict['Topic'] = ','.join(cluster_dict['Words'][:3])
         clusters.append(cluster_dict)
 
     pickle.dump(clusters, open( "clusters.p", "wb" ) )
+
+    # for i, topic_dist in enumerate(topic_word):
+    #     topic_words = np.array(vocab)[np.argsort(topic_dist)][:-(n_top_words+1):-1]
+    #     print('Topic {}: {}'.format(i, ' '.join(topic_words)))
+
+    # for i in range(len(clusters)):
+    #     print clusters[i]['Weight']
     # pickle.dump(topic_word, open( "topic_word.p", "wb" ) )
     # pickle.dump(doc_topic, open( "doc_topic.p", "wb" ) )
 
