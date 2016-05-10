@@ -46,16 +46,31 @@ def getSimilarSongsGivenLyrics():
             cluster_score_result[0] = i
     cluster_number = cluster_score_result[0]
     print("Cluster number: "+str(cluster_number))
+
     song_score = []
+    name_preference_songs = []
+    name_preference = False
     for filename in clusters[cluster_number]['Songs']:
-        with open('../Songs/'+filename, 'r') as f:
-            song_data = f.read()
-            f.close()
-        song_data_set = set(song_data.strip().lower().split(' '))
-        score = len(lyrics_set.intersection(song_data_set))
-        song_score.append((filename, score))
+        name_preference = False
+        file_array = filename[:-4].split('_')
+        for lyric in lyrics_array:
+            if lyric in file_array:
+                name_preference_songs.append((filename,20))
+                name_preference = True
+                break
+        if name_preference == False:
+            with open('../Songs/'+filename, 'r') as f:
+                song_data = f.read()
+                f.close()
+            song_data_set = set(song_data.strip().lower().split(' '))
+            score = len(lyrics_set.intersection(song_data_set))
+            song_score.append((filename, score))
+
     result = sorted(song_score, key=operator.itemgetter(1))[-10:]
     result.reverse()
+    result = name_preference_songs+result
+    result = result[:10]
+
     return_dict = dict()
     song_list = []
     for filename in result:
