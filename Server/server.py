@@ -26,9 +26,9 @@ def displayWordCloud():
     print(frequency_list)
     return render_template('homepage.html',frequency_list=frequency_list)
 
-@app.route('/results_on_lyrics', methods=['GET'])
+@app.route('/results_on_lyrics', methods=['POST'])
 def getSimilarSongsGivenLyrics():
-    lyrics = 'love baby heart'
+    lyrics = request.form['song_lyrics']
     lyrics = lyrics.strip().lower()
     lyrics_set = set(lyrics.split(' '))
     lyrics_array = list(lyrics_set)
@@ -72,9 +72,9 @@ def getSimilarSongsGivenLyrics():
 
     return str(return_dict)
 
-@app.route('/results_on_name', methods=['GET'])
+@app.route('/results_on_name', methods=['POST'])
 def getSimilarSongsGivenFile():
-    filename = 'i_want_you_back.txt'
+    filename = request.form['song_name']
     with open('../Songs/'+filename, 'r') as f:
         filename_data = f.read()
         f.close()
