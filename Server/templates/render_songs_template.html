@@ -1,3 +1,7 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+<div class="row">
 {% if return_dict and return_dict.song_list %}
   {% for song in return_dict.song_list %}
       <ul class="collapsible popout" data-collapsible="accordion">
@@ -8,3 +12,4 @@
       </ul>
   {% endfor %}
 {% endif %}
+</div>
