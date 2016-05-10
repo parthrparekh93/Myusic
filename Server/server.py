@@ -133,7 +133,7 @@ def getSimilarSongsGivenFile():
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
     return_dict['song_list'] = song_list
-
+    
     global frequency_list
     return_dict['frequency_list'] = frequency_list
     return render_template("homepage.html",return_dict = return_dict)
@@ -168,8 +168,6 @@ def getSongsGivenCluster():
     global frequency_list
     return_dict['frequency_list'] = frequency_list
     return render_template("render_songs_template.html",return_dict=return_dict)
-
-
 
 
 if __name__ == '__main__':

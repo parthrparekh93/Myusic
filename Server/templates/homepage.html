@@ -426,6 +426,9 @@
         .bld {
             font-weight: bold;
         }
+        .collapsible-body {
+          white-space:pre-wrap;
+      }
     </style>
 
     <script>
@@ -492,9 +495,17 @@
 
     </div>
 
-    <div id="resultarea"class="col s12 m12 l5">
+    <div class="col s12 m12 l5">
 
       <div class="row">
+        <div class="card-panel teal center-align">
+          <span class="white-text">
+            Recommended Songs
+          </span>
+        </div>
+      </div>
+
+      <div id="resultarea" class="row">
       {% if return_dict and return_dict.song_list %}
         {% for song in return_dict.song_list %}
             <ul class="collapsible popout" data-collapsible="accordion">
@@ -506,8 +517,8 @@
         {% endfor %}
       {% endif %}
       </div>
-
     </div>
+
   </div>
 
   <footer class="page-footer">
@@ -553,11 +564,9 @@ function draw(words) {
       })
       .text(function(d) { return d.text; })
       .on("click", function (d, i){
-
         $.post("/cluster_songs", {'data': d.text}, function(response) {
        var myDiv = $('#resultarea');
        myDiv.html(response);
-
    });
           return false;
       });
