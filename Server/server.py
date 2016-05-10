@@ -6,7 +6,7 @@ Created on Fri Apr 22 02:12:53 2016
 @email : rohan.kulkarni@columbia.edu
 
 """
-from flask import Flask,render_template
+from flask import Flask,render_template,request
 import pickle
 import operator
 
@@ -70,7 +70,7 @@ def getSimilarSongsGivenLyrics():
         song_list.append(each_song)
     return_dict['song_list'] = song_list
 
-    return str(return_dict)
+    return render_template("homepage.html", **return_dict)
 
 @app.route('/results_on_name', methods=['POST'])
 def getSimilarSongsGivenFile():
@@ -114,7 +114,7 @@ def getSimilarSongsGivenFile():
         song_list.append(each_song)
     return_dict['song_list'] = song_list
 
-    return str(return_dict)
+    return render_template("homepage.html", **return_dict)
 
 @app.route('/clusterSongs', methods=['GET'])
 def getSongsGivenCluster():
@@ -141,7 +141,7 @@ def getSongsGivenCluster():
         song_list.append(each_song)
     return_dict['song_list'] = song_list
 
-    return str(return_dict)
+    return render_template("homepage.html", return_dict=return_dict)
 
 
 if __name__ == '__main__':
