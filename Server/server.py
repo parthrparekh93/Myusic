@@ -6,7 +6,7 @@ Created on Fri Apr 22 02:12:53 2016
 @email : rohan.kulkarni@columbia.edu
 
 """
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,jsonify
 import pickle
 import operator
 
@@ -91,7 +91,10 @@ def getSimilarSongsGivenLyrics():
 
 @app.route('/results_on_name', methods=['POST'])
 def getSimilarSongsGivenFile():
-    filename = request.form['song_name']
+    filename = request.form['song_name'].strip().lower()
+    if filename[-4:] != ".txt":
+        filename += ".txt"
+    filename = filename.replace(" ","_")
     with open('../Songs/'+filename, 'r') as f:
         filename_data = f.read()
         f.close()
@@ -135,9 +138,10 @@ def getSimilarSongsGivenFile():
     return_dict['frequency_list'] = frequency_list
     return render_template("homepage.html",return_dict = return_dict)
 
-@app.route('/clusterSongs', methods=['GET'])
+@app.route('/cluster_songs', methods=['POST'])
 def getSongsGivenCluster():
-    word_input_set = set('like,got,new'.split(','))
+    word_input_set = request.form['data']
+    word_input_set = set(word_input_set.split(','))
     for i, cluster in enumerate(clusters):
         cluster_set = set(cluster['Words'])
         if word_input_set.intersection(cluster_set) == word_input_set:
@@ -155,6 +159,7 @@ def getSongsGivenCluster():
         with open('../Songs/'+name, 'r') as f:
             lyrics = f.read()
             f.close()
+            
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
@@ -162,10 +167,10 @@ def getSongsGivenCluster():
 
     global frequency_list
     return_dict['frequency_list'] = frequency_list
-    return render_template("homepage.html",return_dict = return_dict)
+    return render_template("render_songs_template.html",return_dict=return_dict)
 
 
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='localhost',port=8080)
+    app.run(host='localhost',port=8081)

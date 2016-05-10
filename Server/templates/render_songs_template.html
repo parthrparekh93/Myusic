@@ -1,0 +1,10 @@
+{% if return_dict and return_dict.song_list %}
+  {% for song in return_dict.song_list %}
+      <ul class="collapsible popout" data-collapsible="accordion">
+         <li>
+            <div class="collapsible-header"><i class="material-icons">queue_music</i>{{ song.name|safe }}</div>
+            <div class="collapsible-body"><p>{{ song.lyrics }}</p></div>
+         </li>
+      </ul>
+  {% endfor %}
+{% endif %}
