@@ -17,27 +17,6 @@
     <!--<script type="text/javascript" src="{{ url_for('static', filename='highcharts_sand_theme.js') }}"></script>!-->
     <!-- Adding wordcloud library theme !-->
     <script type="text/javascript" src="{{ url_for('static', filename='d3_wordcloud.js') }}"></script>
-
-    <style>
-        body {
-            font-family:"Lucida Grande","Droid Sans",Arial,Helvetica,sans-serif;
-        }
-        .legend {
-            border: 1px solid #555555;
-            border-radius: 5px 5px 5px 5px;
-            font-size: 0.8em;
-            margin: 10px;
-            padding: 8px;
-        }
-        .bld {
-            font-weight: bold;
-        }
-        .collapsible-body {
-          white-space:pre-wrap;
-      }
-    </style>
-
-
     <script>
       function validate_name_form()
       {
@@ -68,12 +47,19 @@
               word:text
           },
           function(data, status){
-            console.log(data);
                 var chart = new Highcharts.Chart({
                 chart: {
-                    renderTo: 'word_stats'
+                    renderTo: 'word_stats',
+                    backgroundColor:'#F5F5F5'
+                 },
+                 title: {
+                     text: 'Frequency of word in every cluster'
+                 },
+                 xAxis:{
+                   allowDecimals: false
                  },
                 series: [{
+                    name:"Cluster number",
                     data: data['chart']['x']
                 }] //series
                 });
@@ -86,7 +72,8 @@
             $(function () {
               $('#cluster_stats').highcharts({
               chart: {
-                  type: 'column'
+                  type: 'column',
+                  backgroundColor: '#F5F5F5'
               },
               title: {
                   text: 'Clusters V/S Number of songs in each'
@@ -122,6 +109,36 @@
           });
       });
     </script>
+
+    <style>
+        body {
+            font-family:"Lucida Grande","Droid Sans",Arial,Helvetica,sans-serif;
+            background-color: #F5F5F5;
+        }
+        .legend {
+            border: 1px solid #555555;
+            border-radius: 5px 5px 5px 5px;
+            font-size: 0.8em;
+            margin: 10px;
+            padding: 8px;
+        }
+        .bld {
+            font-weight: bold;
+        }
+        .collapsible-body {
+          white-space:pre-wrap;
+        }
+        .card-panel{
+          background-color: #535353;
+        }
+
+        #song_name{
+          color: #FFFFFF;
+        }
+        #song_lyrics{
+          color: #FFFFFF;
+        }
+    </style>
 </head>
 
 <body>
@@ -152,7 +169,7 @@
               <label for="textarea1">Search word</label>
             </div>
           </div>
-          <button id="word_search_button" class="btn waves-effect waves-light center-align" type="submit" name="word_stats_button">Get word frequencies
+          <button id="word_search_button" class="btn waves-effect waves-light center-align teal lighten-1" type="submit" name="word_stats_button">Get word frequencies
             <i class="material-icons right">send</i>
           </button>
         </form>
@@ -162,7 +179,7 @@
     <div class="col s12 m12 l5">
 
       <div class="row">
-        <div class="card-panel teal center-align">
+        <div id="recommendation-card" class="card-panel center-align">
           <span class="white-text">
             Recommended Songs
           </span>
@@ -182,7 +199,7 @@
       {% endif %}
       </div>
 
-      <div class="row card-panel teal lighten-4">
+      <div class="row card-panel lighten-4">
         <form name="name_form" class="col s12" method="POST" action="/results_on_name" onsubmit="return validate_name_form()">
           <div class="row">
             <div class="col s12">
@@ -190,13 +207,13 @@
               <label for="textarea1">Song Name</label>
             </div>
           </div>
-          <button class="btn waves-effect waves-light center-align" type="submit" name="name_button">Get similar songs
+          <button class="btn waves-effect waves-light center-align teal lighten-1"" type="submit" name="name_button">Get similar songs
             <i class="material-icons right">send</i>
           </button>
         </form>
       </div>
 
-      <div class="row card-panel teal lighten-4">
+      <div class="row card-panel lighten-4">
         <form name="lyrics_form" class="col s12" method="POST" action="/results_on_lyrics" onsubmit="return validate_lyrics_form()">
           <div class="row">
             <div class="col s12">
@@ -204,23 +221,20 @@
               <label for="textarea1">Song Lyrics</label>
             </div>
           </div>
-          <button class="btn waves-effect waves-light center-align" type="submit" name="lyrics_button">Get similar songs
+          <button class="btn waves-effect waves-light center-align teal lighten-1" type="submit" name="lyrics_button">Get similar songs
             <i class="material-icons right">send</i>
           </button>
         </form>
       </div>
 
     </div>
-
   </div>
 
   <footer class="page-footer">
-    <div class="footer-copyright">
-        <div class="container center-align">
+    <div class="footer-copyright center-align">
           Made with &#10084 in Columbia University
-        </div>
     </div>
-  </footer>
+  </footer
 </body>
 
 <script>
