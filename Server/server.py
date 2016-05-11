@@ -24,8 +24,7 @@ def displayWordCloud():
         cloud_dict = dict()
         cloud_dict['text'] = clusters[i]['Topic']
         cloud_dict['size'] = clusters[i]['Weight']/2
-        frequency_list.append(cloud_dict)
-    
+        frequency_list.append(cloud_dict)  
     chart = dict()
     chart['x'] = range(1,len(clusters)+1)
     chart['y'] = [len(cluster['Songs']) for cluster in clusters]
@@ -50,7 +49,6 @@ def getSimilarSongsGivenLyrics():
             cluster_score_result[0] = i
     cluster_number = cluster_score_result[0]
     print("Cluster number: "+str(cluster_number))
-
     song_score = []
     name_preference_songs = []
     name_preference = False
@@ -69,12 +67,10 @@ def getSimilarSongsGivenLyrics():
             song_data_set = set(song_data.strip().lower().split(' '))
             score = len(lyrics_set.intersection(song_data_set))
             song_score.append((filename, score))
-
     result = sorted(song_score, key=operator.itemgetter(1))[-10:]
     result.reverse()
     result = name_preference_songs+result
     result = result[:10]
-
     return_dict = dict()
     song_list = []
     for filename in result:
@@ -86,8 +82,7 @@ def getSimilarSongsGivenLyrics():
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
-    return_dict['song_list'] = song_list
-    
+    return_dict['song_list'] = song_list 
     chart = dict()
     chart['x'] = range(1,len(clusters)+1)
     chart['y'] = [len(cluster['Songs']) for cluster in clusters]
@@ -107,14 +102,11 @@ def getSimilarSongsGivenFile():
         filename_data = f.read()
         f.close()
     filename_data_set = set(filename_data.strip().lower().split(' '))
-
     for i,cluster in enumerate(clusters):
         if filename in cluster['Songs']:
             cluster_number = i
             break
-
     print("Cluster number: "+str(cluster_number))
-
     song_score = []
     for filename1 in clusters[cluster_number]['Songs']:
         if filename1 == filename:
@@ -125,10 +117,8 @@ def getSimilarSongsGivenFile():
         song_data_set = set(song_data.strip().lower().split(' '))
         score = len(filename_data_set.intersection(song_data_set))
         song_score.append((filename1, score))
-
     result = sorted(song_score, key=operator.itemgetter(1))[-10:]
     result.reverse()
-
     return_dict = dict()
     song_list = []
     for filename in result:
@@ -140,8 +130,7 @@ def getSimilarSongsGivenFile():
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
-    return_dict['song_list'] = song_list
-    
+    return_dict['song_list'] = song_list 
     global frequency_list
     return_dict['frequency_list'] = frequency_list
     chart = dict()
@@ -159,28 +148,30 @@ def getSongsGivenCluster():
         if word_input_set.intersection(cluster_set) == word_input_set:
             cluster_number = i
             break
-
     print("Cluster number: "+str(cluster_number))
-
     result = clusters[cluster_number]['Songs'][:10]
-
     return_dict = dict()
     song_list = []
     for name in result:
         each_song = dict()
         with open('../Songs/'+name, 'r') as f:
             lyrics = f.read()
-            f.close()
-            
+            f.close()            
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
     return_dict['song_list'] = song_list
-
     global frequency_list
     return_dict['frequency_list'] = frequency_list
     return render_template("render_songs_template.html",return_dict=return_dict)
 
+@app.route('/search_word_statistics/',methods=['POST'])
+def getWordStatistics():
+    word = request.form['word'].strip().split(" ")[0]
+    return_dict = dict()
+    return_dict['x'] = range(1,len(clusters)+1)
+    return_dict['y'] = range(1,len(clusters)+1)
+    return jsonify(chart=return_dict)
 
 if __name__ == '__main__':
     app.debug = True

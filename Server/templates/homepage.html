@@ -59,6 +59,31 @@
         }
       }
 
+      $( document ).ready(function() {
+        $("#word_search_button").click(function(e){
+          e.preventDefault();
+          var text = $('#search_word').val();
+          $.post("/search_word_statistics/",
+          {
+              word:text
+          },
+          function(data, status){
+            console.log(data);
+                var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'word_stats'
+                 },
+                series: [{
+                    data: data['chart']['x']
+                }] //series
+                }); //chart
+
+            chart.series[0].setData(data['chart']['y']);
+            });
+          });
+        });
+
+
             $(function () {
               $('#cluster_stats').highcharts({
               chart: {
@@ -112,8 +137,26 @@
       <div class="row">
         <div id="chart" align="left"></div>
       </div>
+
       <div class="row">
         <div class="col s12 m12 l12" id="cluster_stats" align="left"></div>
+      </div>
+
+      <div class="row">
+        <div class="row">
+          <div class="col s12 m12 l12" id="word_stats" align="left"></div>
+        </div>
+        <form name="word_analysis_form" class="col s12">
+          <div class="row">
+            <div class="col s12">
+              <textarea id="search_word" class="materialize-textarea" name="search_word"></textarea>
+              <label for="textarea1">Search word</label>
+            </div>
+          </div>
+          <button id="word_search_button" class="btn waves-effect waves-light center-align" type="submit" name="word_stats_button">Get word frequencies
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
       </div>
     </div>
 
