@@ -168,9 +168,21 @@ def getSongsGivenCluster():
 @app.route('/search_word_statistics/',methods=['POST'])
 def getWordStatistics():
     word = request.form['word'].strip().split(" ")[0]
+    word_counts_across_clusters = list()
+    
+    for cluster in clusters:
+        word_count = 0
+        for song in cluster['Songs']:
+            with open('../Songs/'+song, 'r') as f:
+                lyrics = f.read()
+                f.close()
+            lyrics_list = lyrics.lower().split()
+            word_count += lyrics_list.count(word.lower())
+        word_counts_across_clusters.append(word_count)
+        
     return_dict = dict()
     return_dict['x'] = range(1,len(clusters)+1)
-    return_dict['y'] = range(1,len(clusters)+1)
+    return_dict['y'] = word_counts_across_clusters
     return jsonify(chart=return_dict)
 
 if __name__ == '__main__':
