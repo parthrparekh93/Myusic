@@ -12,7 +12,7 @@ import operator
 import indicoio
 
 
-clusters = pickle.load(open("../clusters.p", "rb"))
+clusters = pickle.load(open("../src/clusters.p", "rb"))
 app = Flask(__name__,static_url_path='/static')
 
 frequency_list = list()
@@ -26,7 +26,7 @@ def displayWordCloud():
         cloud_dict = dict()
         cloud_dict['text'] = clusters[i]['Topic']
         cloud_dict['size'] = clusters[i]['Weight']/2
-        frequency_list.append(cloud_dict)  
+        frequency_list.append(cloud_dict)
     chart = dict()
     chart['x'] = range(1,len(clusters)+1)
     chart['y'] = [len(cluster['Songs']) for cluster in clusters]
@@ -84,7 +84,7 @@ def getSimilarSongsGivenLyrics():
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
-    return_dict['song_list'] = song_list 
+    return_dict['song_list'] = song_list
     chart = dict()
     chart['x'] = range(1,len(clusters)+1)
     chart['y'] = [len(cluster['Songs']) for cluster in clusters]
@@ -132,7 +132,7 @@ def getSimilarSongsGivenFile():
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
-    return_dict['song_list'] = song_list 
+    return_dict['song_list'] = song_list
     global frequency_list
     return_dict['frequency_list'] = frequency_list
     chart = dict()
@@ -158,7 +158,7 @@ def getSongsGivenCluster():
         each_song = dict()
         with open('../Songs/'+name, 'r') as f:
             lyrics = f.read()
-            f.close()            
+            f.close()
         each_song['name'] = " ".join(name[:-4].split('_'))
         each_song['lyrics'] = lyrics
         song_list.append(each_song)
@@ -171,7 +171,7 @@ def getSongsGivenCluster():
 def getWordStatistics():
     word = request.form['word'].strip().split(" ")[0]
     word_counts_across_clusters = list()
-    
+
     for cluster in clusters:
         word_count = 0
         for song in cluster['Songs']:
@@ -181,7 +181,7 @@ def getWordStatistics():
             lyrics_list = lyrics.lower().split()
             word_count += lyrics_list.count(word.lower())
         word_counts_across_clusters.append(word_count)
-        
+
     return_dict = dict()
     return_dict['x'] = range(1,len(clusters)+1)
     return_dict['y'] = word_counts_across_clusters
@@ -199,12 +199,12 @@ def getSongEmotions():
         f.close()
     text = filename_data.strip()
     emotion_dict = indicoio.emotion(text)
-    
+
     return_dict = dict()
     return_dict['data'] = [[emotion,score] for emotion,score in zip(emotion_dict.keys(),emotion_dict.values())]
     return jsonify(chart=return_dict)
-    
-    
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='localhost',port=8082)
