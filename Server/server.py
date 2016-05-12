@@ -9,6 +9,8 @@ Created on Fri Apr 22 02:12:53 2016
 from flask import Flask,render_template,request,jsonify
 import pickle
 import operator
+import indicoio
+
 
 clusters = pickle.load(open("../clusters.p", "rb"))
 app = Flask(__name__,static_url_path='/static')
@@ -185,6 +187,24 @@ def getWordStatistics():
     return_dict['y'] = word_counts_across_clusters
     return jsonify(chart=return_dict)
 
+@app.route('/get_song_emotions/',methods=['POST'])
+def getSongEmotions():
+    indicoio.config.api_key = '781cddf05f6cb0d88449272c8c7768eb'
+    filename = request.form['song_name'].strip().lower()
+    if filename[-4:] != ".txt":
+        filename += ".txt"
+    filename = filename.replace(" ","_")
+    with open('../Songs/'+filename, 'r') as f:
+        filename_data = f.read()
+        f.close()
+    text = filename_data.strip()
+    emotion_dict = indicoio.emotion(text)
+    
+    return_dict = dict()
+    return_dict['data'] = [[emotion,score] for emotion,score in zip(emotion_dict.keys(),emotion_dict.values())]
+    return jsonify(chart=return_dict)
+    
+    
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='localhost',port=8083)
+    app.run(host='localhost',port=8082)

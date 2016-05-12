@@ -5,12 +5,13 @@
 
 <head>
     <title>Myusic</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <!-- Adding Highcharts theme !-->
@@ -68,12 +69,50 @@
           });
         });
 
+        $( document ).ready(function() {
+          $("#get_emotion_button").click(function(e){
+            e.preventDefault();
+            var text = $('#emotions_filename').val();
+            $.post("/get_song_emotions/",
+            {
+                song_name:text
+            },
+            function(data, status){
+                $(function () {
+                  var emotion_chart = new Highcharts.Chart({
+                    chart: {
+                        type: 'pie',
+                        backgroundColor: "#F5F5F5",
+                        renderTo: 'lyrics_emotions',
+                        options3d: {
+                            enabled: true,
+                            alpha: 45
+                        }
+                    },
+                    title: {
+                        text: 'Emotions depicted by the song'
+                    },
+                    plotOptions: {
+                        pie: {
+                            innerSize: 100,
+                            depth: 45
+                        }
+                    },
+                    series: [{
+                        name: 'Score',
+                        data: data['chart']['data']
+                    }]
+                });
+              });
+            });
+          });
+          });
 
             $(function () {
               $('#cluster_stats').highcharts({
               chart: {
                   type: 'column',
-                  backgroundColor: '#F5F5F5'
+                  backgroundColor: "#F5F5F5"
               },
               title: {
                   text: 'Clusters V/S Number of songs in each'
@@ -129,15 +168,15 @@
           white-space:pre-wrap;
         }
         .card-panel{
-          background-color: #C0B283;
+          background-color: #3F3250;
         }
-
         #song_name{
           color: #FFFFFF;
         }
         #song_lyrics{
           color: #FFFFFF;
         }
+
     </style>
 </head>
 
@@ -222,6 +261,23 @@
             </div>
           </div>
           <button class="btn waves-effect waves-light center-align teal lighten-1" type="submit" name="lyrics_button">Get similar songs
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
+      </div>
+
+      <div class="row">
+        <div class="row">
+          <div class="col s12 m12 l12" id="lyrics_emotions" align="left"></div>
+        </div>
+        <form name="lyrics_emotions_form" class="col s12">
+          <div class="row">
+            <div class="col s12">
+              <textarea id="emotions_filename" class="materialize-textarea" name="emotions_filename"></textarea>
+              <label for="textarea1">Enter filename</label>
+            </div>
+          </div>
+          <button id="get_emotion_button" class="btn waves-effect waves-light center-align teal lighten-1" type="submit" name="get_emotion_button">Get emotion scores
             <i class="material-icons right">send</i>
           </button>
         </form>
